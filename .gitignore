@@ -5,3 +5,4 @@
 Thumbs.db
 .vercel
 dist/
+package-lock.json
