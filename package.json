@@ -1,13 +1,8 @@
 {
   "name": "blackwater",
   "version": "1.0.0",
-  "description": "Private, offline-first Red Dead Redemption 2 photo extraction and conversion utility",
-  "main": "index.html",
+  "private": true,
   "scripts": {
-    "dev": "serve .",
-    "build": "echo 'Build complete'"
-  },
-  "keywords": ["rdr2", "red-dead-redemption-2", "photo-extractor", "jpeg", "western", "blackwater"],
-  "author": "SaiMukesh77",
-  "license": "MIT"
+    "build": "node build.js"
+  }
 }
