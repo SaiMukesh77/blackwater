@@ -2,11 +2,22 @@
 
 > **Private, offline-first RDR2 photo extraction and conversion utility.**
 
-Blackwater is a native desktop application written in Rust designed to extract and convert photographs from Red Dead Redemption 2 (PC) camera and photomode files with minimal RAM consumption, zero telemetry, and maximum preservation of original image data.
+[![Live Web Extractor](https://img.shields.io/badge/Live%20Web%20App-Vercel-black?style=for-the-badge&logo=vercel)](https://temporary-zippy-crimson-5xov45p.vercel.app)
+[![License: MIT](https://img.shields.io/badge/License-MIT-amber.svg?style=for-the-badge)](LICENSE)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-SaiMukesh77%2Fblackwater-181717?style=for-the-badge&logo=github)](https://github.com/SaiMukesh77/blackwater)
+
+🌐 **Try the Web App Online:** [https://temporary-zippy-crimson-5xov45p.vercel.app](https://temporary-zippy-crimson-5xov45p.vercel.app)  
+*(Extract & convert your RDR2 photos directly in the browser — 100% client-side, zero uploads)*
+
+---
+
+Blackwater is available both as an **instant client-side web application** and as an **ultra-fast native desktop application written in Rust**. It is designed to extract and convert photographs from Red Dead Redemption 2 (PC) camera and photomode files with minimal RAM consumption, zero telemetry, and maximum preservation of original image data.
 
 ---
 
 ## Key Features
+
+- 🌐 **In-Browser Web Extractor**: Drag & drop `PRDR3*` save files or entire folders right in your browser for instant extraction and batch ZIP downloads.
 
 - 🔒 **100% Offline & Private ("LOCAL ONLY")**: Your photos never leave your machine. No accounts, no telemetry, no analytics, no cloud APIs, and no network requests.
 - ⚡ **Extremely Low Memory Footprint**: Engineered specifically for systems with 4 GB to 8 GB RAM. Memory usage remains bounded in $O(1)$ regardless of whether you process 10 photos or 10,000 photos.
@@ -97,7 +108,7 @@ Output File / Streaming ZIP Exporter
 
 ```bash
 # Clone repository
-git clone https://github.com/your-username/blackwater.git
+git clone https://github.com/SaiMukesh77/blackwater.git
 cd blackwater
 
 # Check and build dev executable
