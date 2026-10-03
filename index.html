@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blackwater — Red Dead Redemption 2 Photo Extractor & Converter</title>
+  <meta name="description" content="Extract, convert, and organize your Red Dead Redemption 2 in-game camera photos directly in your browser or with our native Rust desktop app. 100% private & offline.">
+  <meta name="theme-color" content="#0a090c">
+  
+  <!-- Open Graph / Meta -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Blackwater — RDR2 Photo Extractor">
+  <meta property="og:description" content="Private, offline-first Red Dead Redemption 2 photo extraction utility. Instant JPEG/PNG conversion and batch ZIP exports.">
+  <meta property="og:image" content="assets/hero_bg.jpg">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Outfit:wght@300;400;500;600;700&family=Rye&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- JSZip for batch download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" integrity="sha512-XMVd28F1oH/O71fKEP83v3jc20DA74MpnQZ5619hWYhsubDKIwebFXQfcLURQbiEF4GWqMHlyZsHAweyMp+1yA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/jpeg" href="assets/logo.jpg">
+</head>
+<body>
+  <!-- Ambient Western Lighting -->
+  <div class="ambient-glow glow-top"></div>
+  <div class="ambient-glow glow-bottom"></div>
+
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <img src="assets/logo.jpg" alt="Blackwater Logo" class="brand-logo">
+        <div class="brand-text">
+          <span class="brand-title">BLACKWATER</span>
+          <span class="brand-subtitle">RDR2 Photo Utility</span>
+        </div>
+      </div>
+      <nav class="header-nav">
+        <a href="#extractor" class="nav-link active">Web Extractor</a>
+        <a href="#guide" class="nav-link">Save Locator</a>
+        <a href="#desktop" class="nav-link">Desktop App</a>
+        <a href="https://github.com/SaiMukesh77/blackwater" target="_blank" rel="noopener noreferrer" class="btn btn-github">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          <span>GitHub</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-backdrop" style="background-image: linear-gradient(180deg, rgba(10,9,12,0.7) 0%, rgba(10,9,12,0.92) 80%, #0a090c 100%), url('assets/hero_bg.jpg');"></div>
+    <div class="container hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span> 100% Client-Side • Zero Cloud Uploads • Instant Processing
+      </div>
+      <h1 class="hero-title">Unearth Your Frontier Memories</h1>
+      <p class="hero-description">
+        Extract raw high-definition photographs trapped inside Red Dead Redemption 2 <code>PRDR3*</code> save files. Convert directly to JPEG or pristine lossless PNG with zero quality loss.
+      </p>
+      <div class="hero-actions">
+        <a href="#extractor" class="btn btn-primary">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+          <span>Launch Web Extractor</span>
+        </a>
+        <button id="btn-load-demo" class="btn btn-secondary">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          <span>Try Demo Sample</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Web Extractor Application -->
+  <main class="container" id="extractor">
+    <!-- Dropzone Area -->
+    <div class="dropzone-card glass-panel" id="dropzone">
+      <input type="file" id="file-input" multiple accept="*/*" style="display: none;">
+      <input type="file" id="folder-input" webkitdirectory directory multiple style="display: none;">
+      
+      <div class="dropzone-content">
+        <div class="dropzone-icon-wrap">
+          <svg class="dropzone-icon" width="56" height="56" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+          </svg>
+        </div>
+        <h2 class="dropzone-title">Drop Your RDR2 Save Files Here</h2>
+        <p class="dropzone-hint">
+          Drag and drop <code>PRDR3*</code> files, or select an entire Rockstar Profiles folder.
+        </p>
+        <div class="dropzone-buttons">
+          <button type="button" class="btn btn-gold" id="btn-select-files">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <span>Choose Files</span>
+          </button>
+          <button type="button" class="btn btn-glass" id="btn-select-folder">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+            <span>Select Folder</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Processing / Stats Dashboard -->
+    <div class="dashboard-bar glass-panel" id="stats-panel" style="display: none;">
+      <div class="stat-item">
+        <span class="stat-label">Files Processed</span>
+        <span class="stat-value" id="stat-scanned">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Photos Extracted</span>
+        <span class="stat-value text-gold" id="stat-extracted">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Total Data Size</span>
+        <span class="stat-value" id="stat-size">0 KB</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Output Target</span>
+        <div class="format-toggle">
+          <button class="toggle-btn active" data-format="jpeg">JPEG</button>
+          <button class="toggle-btn" data-format="png">PNG</button>
+        </div>
+      </div>
+      <div class="batch-actions">
+        <button class="btn btn-gold" id="btn-download-zip" disabled>
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          <span>Download All (ZIP)</span>
+        </button>
+        <button class="btn btn-glass-danger" id="btn-clear">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+          <span>Clear</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Gallery Grid -->
+    <section class="gallery-section" id="gallery-container">
+      <div class="gallery-header" id="gallery-header" style="display: none;">
+        <h3 class="gallery-title">Extracted Photographs</h3>
+        <span class="gallery-count" id="gallery-count-badge">0 items</span>
+      </div>
+      <div class="gallery-grid" id="gallery-grid">
+        <!-- Rendered items go here -->
+      </div>
+    </section>
+
+    <!-- Save File Directory Helper Guide -->
+    <section class="guide-section glass-panel" id="guide">
+      <div class="guide-header">
+        <div class="guide-icon">
+          <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <div>
+          <h2 class="guide-title">Where are RDR2 Camera Photos Saved?</h2>
+          <p class="guide-subtitle">Your camera snapshots are stored in your Windows Rockstar Games profile directory as files starting with <code>PRDR3</code>.</p>
+        </div>
+      </div>
+      <div class="path-box">
+        <code id="path-text">%USERPROFILE%\Documents\Rockstar Games\Red Dead Redemption 2\Profiles\&lt;Profile-ID&gt;\</code>
+        <button class="btn-copy" id="btn-copy-path" title="Copy Path">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/></svg>
+          <span id="copy-text">Copy</span>
+        </button>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <div class="step-desc">Press <kbd>Win + R</kbd> on your keyboard to open the Windows Run prompt.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <div class="step-desc">Paste the copied path above and press <kbd>Enter</kbd> to open your profile folder.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <div class="step-desc">Drag and drop all files starting with <strong>PRDR3</strong> directly into this web tool.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Native Desktop App Showcase -->
+    <section class="desktop-section glass-panel" id="desktop">
+      <div class="desktop-grid">
+        <div class="desktop-info">
+          <span class="badge-gold">NATIVE RUST DESKTOP APP</span>
+          <h2 class="desktop-title">Blackwater Desktop for Windows</h2>
+          <p class="desktop-text">
+            For power users archiving hundreds of 4K photos: Blackwater is also available as an ultra-fast, zero-overhead native Windows desktop application written in Rust using <code>egui</code> and multi-threaded streaming decoders.
+          </p>
+          <ul class="feature-list">
+            <li>
+              <svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+              <span>Automatic Rockstar Games profile auto-detection</span>
+            </li>
+            <li>
+              <svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+              <span>Multi-threaded worker pool with SIMD decompression</span>
+            </li>
+            <li>
+              <svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+              <span>64KB streaming chunk buffers (under 25MB peak RAM)</span>
+            </li>
+          </ul>
+          <div class="desktop-buttons">
+            <a href="https://github.com/SaiMukesh77/blackwater" target="_blank" rel="noopener noreferrer" class="btn btn-gold">
+              <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+              <span>View on GitHub</span>
+            </a>
+            <div class="command-pill">
+              <code>git clone https://github.com/SaiMukesh77/blackwater.git &amp;&amp; cargo run --release</code>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Lightbox Modal -->
+  <div class="lightbox-backdrop" id="lightbox">
+    <button class="lightbox-close" id="btn-close-lightbox">&times;</button>
+    <div class="lightbox-content">
+      <img src="" alt="Enlarged RDR2 Photo" id="lightbox-img">
+      <div class="lightbox-meta">
+        <div id="lightbox-title" class="lightbox-meta-title">PRDR3_Photo.jpg</div>
+        <div id="lightbox-info" class="lightbox-meta-info">1920 &times; 1080 • 420 KB</div>
+        <div class="lightbox-actions">
+          <button class="btn btn-sm btn-gold" id="btn-lightbox-download">Download</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-left">
+        <p>&copy; 2026 Blackwater. Open source under MIT License.</p>
+        <p class="footer-subtext">Red Dead Redemption 2 is a trademark of Take-Two Interactive &amp; Rockstar Games. This utility is an independent fan project.</p>
+      </div>
+      <div class="footer-right">
+        <a href="https://github.com/SaiMukesh77/blackwater" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
+        <span>•</span>
+        <a href="#extractor">Web Extractor</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
